@@ -150,8 +150,8 @@ async function GetPixel(url, x, y) {
  * @param {number} heigth
  */
 function CellStyles(cell, width, heigth) {
-  // cell.style.width = `${width / ROWS - 1}px`;
-  // cell.style.height = `${heigth / COLUMNS - 1}px`;
-  cell.style.width = `${width / ROWS}px`;
+  cell.style.width = `${width / ROWS - 1}px`;
   cell.style.height = `${heigth / COLUMNS - 1}px`;
+  // cell.style.width = `${width / ROWS}px`;
+  // cell.style.height = `${heigth / COLUMNS}px`;
 }
