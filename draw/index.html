@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snake No Work Do - (Passing Time At Work)...</title>
+    <style>
+        html,body {
+            padding: 0px !important;
+            margin: 0px !important;
+            background-color: black;
+            height: 100vh !important;
+        }
+
+        .toolbar {
+            width: 100%;
+            height: 50px;
+            color: #ffffffb5;
+        }
+
+        .score .title {
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .board {
+            width: calc(100%) !important;
+            height: calc(100%) !important;
+        }
+        
+        .board .cell {
+            background-color: white;
+            border: .5px solid #000;
+            float: left;
+            margin: 0 auto !important;
+        }
+
+        .board .cell.active {
+            background-color: green;
+        }
+
+        .board .cell.food {
+            background-color: orange;
+            border-radius: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="board"></div>
+    <script src="./main.js"></script>
+</body>
+</html>

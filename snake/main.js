@@ -41,13 +41,13 @@ document.addEventListener("DOMContentLoaded", async function (event) {
     "a = Left\r\n" 
   );
 
-  InitializeGame();
+  InitializeCanvas();
 });
 
 /**
  *
  */
-function InitializeGame() {
+function InitializeCanvas() {
   DrawBoard();
   NewGameState();
   SetScore(STATE.points);
@@ -236,7 +236,7 @@ function ChangePosition(row, column) {
   if (BodyCollision(row, column)) {
     alert("GAME OVER!!!\r\nPress Ok to reset");
     ResetGame();
-    InitializeGame();
+    InitializeCanvas();
     return;
   }
 
