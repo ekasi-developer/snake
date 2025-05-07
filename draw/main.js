@@ -2,17 +2,12 @@ const BOARD = document.querySelector(".board");
 const SCORE_BOARD = document.querySelector(".score-points");
 const COLUMNS = 100;
 const ROWS = 100;
-const FOOD_POINT = 10;
 
 /**
  *
  */
 let BOARD_CELLS = [];
 
-/**
- *
- */
-let GAME_LOOP_INTERVAL;
 
 /**
  *
@@ -51,24 +46,26 @@ async function InitializeCanvas() {
 
   let pixals = await GetPixel("./image.jpg", 100, 100);
 
-
-  let index = 0;
-
   for (let col = 0; col < COLUMNS; col++) {
     for (let row = 0; row < ROWS; row++) {
-      BOARD_CELLS[col][row].style.backgroundColor = `${RgbaToHex(...pixals[index])}`;
 
-      
-      index++
+      let n = (col * 100) + row
+
+      BOARD_CELLS[col][row].style.backgroundColor = `${RgbaToHex(...pixals[n])}`;
     }
   }
-
-  console.log(pixals.length);
 }
 
+/**
+ * 
+ * @param {*} r 
+ * @param {*} g 
+ * @param {*} b 
+ * @param {*} a 
+ * @returns 
+ */
 function RgbaToHex(r, g, b, a = 255) {
-  const alpha = (a / 255).toFixed(3); // Normalize alpha to 0–1
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  return `rgba(${r}, ${g}, ${b}, ${(a / 255).toFixed(3)})`;
 }
 
 /**
@@ -98,8 +95,6 @@ function DrawBoard() {
       CellStyles(BOARD_CELLS[col][row], width, heigth);
 
       BOARD.append(BOARD_CELLS[col][row]);
-
-      // BOARD_CELLS[col][row].addEventListener("mouseover", () => Draw(BOARD_CELLS[col][row]))
     }
   }
 }

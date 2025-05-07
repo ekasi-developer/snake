@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake No Work Do - (Passing Time At Work)...</title>
+    <title>(Passing Time At Work)</title>
     <style>
         html,body {
             padding: 0px !important;
@@ -43,6 +43,16 @@
         .board .cell.food {
             background-color: orange;
             border-radius: 100px;
+        }
+
+        .board .cell.food.timer {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% {
+                opacity: 0;
+            }
         }
     </style>
 </head>

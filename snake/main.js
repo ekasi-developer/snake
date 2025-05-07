@@ -1,8 +1,17 @@
 const BOARD = document.querySelector(".board");
 const SCORE_BOARD = document.querySelector(".score-points");
 const COLUMNS = 30;
-const ROWS = 50; 
+const ROWS = 50;
 const FOOD_POINT = 10;
+
+let test = [1, 2, 3, 4, 5];
+
+console.log(
+  // [...test.slice(0, 2), ...test.slice(3, test.length)]
+
+  test.splice(2, 1),
+  test
+);
 
 /**
  *
@@ -31,15 +40,15 @@ window.addEventListener("resize", async function (event) {
 
 // OnReady Event
 document.addEventListener("DOMContentLoaded", async function (event) {
-  alert(
-    "----------------------------------\r\n" +
-    "           GamePlay Controls      \r\n" +
-    "----------------------------------\r\n" +
-    "w = Up\r\n" +
-    "s = Down\r\n" +
-    "d = Right\r\n" +
-    "a = Left\r\n" 
-  );
+  // alert(
+  //   "----------------------------------\r\n" +
+  //   "           GamePlay Controls      \r\n" +
+  //   "----------------------------------\r\n" +
+  //   "w = Up\r\n" +
+  //   "s = Down\r\n" +
+  //   "d = Right\r\n" +
+  //   "a = Left\r\n"
+  // );
 
   InitializeCanvas();
 });
@@ -65,14 +74,14 @@ function ResetGame() {
 }
 
 /**
- * @param {number} score 
+ * @param {number} score
  */
 function SetScore(score) {
-    SCORE_BOARD.innerHTML = score;
+  SCORE_BOARD.innerHTML = score;
 }
 
 /**
- * 
+ *
  * @returns {object}
  */
 function NewGameState() {
@@ -89,10 +98,7 @@ function NewGameState() {
       row: null,
       column: null,
     },
-    food: {
-      row: null,
-      column: null,
-    },
+    food: [],
   };
 }
 
@@ -105,37 +111,91 @@ function GameLoop() {
 
 /**
  *
+ * @return {}
  */
-function AddFood() {
-  row = Math.floor(Math.random() * ROWS);
-  column = Math.floor(Math.random() * COLUMNS);
+function EmptyPosition() {
+  let position = {
+    row: Math.floor(Math.random() * ROWS),
+    column: Math.floor(Math.random() * COLUMNS),
+  };
 
   for (let i = 0; i < STATE.body.length; i++) {
-    if (row == STATE.body[i].row && column == STATE.body[i].column) {
-      return AddFood();
+    if (
+      position.row == STATE.body[i].row &&
+      position.column == STATE.body[i].column
+    ) {
+      return EmptyPosition();
     }
   }
 
-  GetBlock(row, column).classList.add("food");
-
-  STATE.food.row = row;
-  STATE.food.column = column;
+  return position;
 }
 
 /**
  *
  */
-function EatFood() {
+function AddFood(timeout = false) {
+  let position = EmptyPosition();
+
+  timeout
+    ? GetBlock(position.row, position.column).classList.add("food", "timer")
+    : GetBlock(position.row, position.column).classList.add("food");
+
+  if (timeout) {
+    position["timeout"] = setTimeout(function () {
+      STATE.food.splice(PositionFood(position.row, position.column), 1);
+      GetBlock(position.row, position.column).classList.remove("food", "timer");
+    }, 1000 * 6);
+  }
+
+  STATE.food.push(position);
+}
+
+
+/**
+ * 
+ * @returns {boolean}
+ */
+function HasOnlyTimeoutFood() {
+  for (let i = 0; i < STATE.food.length; i++) {
+    if (!STATE.food[i].timeout) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ *
+ */
+function EatFood(row, column) {
   const tail = {
     row: STATE.tail.row,
     column: STATE.tail.column,
   };
 
   STATE.body.push(tail);
-  GetBlock(STATE.food.row, STATE.food.column).classList.remove("food");
+  GetBlock(row, column).classList.remove("food", "timer");
   GetBlock(tail.row, tail.column).classList.add("active");
-  SetScore(STATE.points += FOOD_POINT)
-  AddFood();
+  SetScore((STATE.points += FOOD_POINT));
+
+  let position = PositionFood(row, column);
+
+  let food = STATE.food[position];
+
+  if (food.timeout) {
+    clearTimeout(food.timeout);
+  }
+
+  STATE.food.splice(position, 1);
+
+  if (STATE.food.length == 0 || HasOnlyTimeoutFood()) {
+    AddFood();
+  }
+
+  if (STATE.points % 50 == 0) {
+    AddFood(true);
+  }
 }
 
 /**
@@ -203,6 +263,21 @@ function BodyCollision(row, column) {
 }
 
 /**
+ *
+ * @param {number} row
+ * @param {number} col
+ * @return {boolean}
+ */
+function PositionFood(row, column) {
+  for (let i = 0; i < STATE.food.length; i++) {
+    if (row == STATE.food[i].row && column == STATE.food[i].column) {
+      return i;
+    }
+  }
+  return null;
+}
+
+/**
  * @param {number} column
  * @param {number} row
  */
@@ -228,9 +303,10 @@ function ChangePosition(row, column) {
     column: column,
   };
 
-  // Eating food because
-  if (next.row == STATE.food.row && next.column == STATE.food.column) {
-    EatFood();
+  console.log("FOOD ", STATE.food.length);
+
+  if (PositionFood(next.row, next.column) != null) {
+    EatFood(next.row, next.column);
   }
 
   if (BodyCollision(row, column)) {
@@ -247,7 +323,9 @@ function ChangePosition(row, column) {
     const row = next.row;
     const column = next.column;
 
-    GetBlock(STATE.body[i].row, STATE.body[i].column).classList.remove("active");
+    GetBlock(STATE.body[i].row, STATE.body[i].column).classList.remove(
+      "active"
+    );
     GetBlock(next.row, next.column).classList.add("active");
 
     next.row = STATE.body[i].row;
