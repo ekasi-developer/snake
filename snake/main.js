@@ -40,15 +40,15 @@ window.addEventListener("resize", async function (event) {
 
 // OnReady Event
 document.addEventListener("DOMContentLoaded", async function (event) {
-  // alert(
-  //   "----------------------------------\r\n" +
-  //   "           GamePlay Controls      \r\n" +
-  //   "----------------------------------\r\n" +
-  //   "w = Up\r\n" +
-  //   "s = Down\r\n" +
-  //   "d = Right\r\n" +
-  //   "a = Left\r\n"
-  // );
+  alert(
+    "----------------------------------\r\n" +
+    "           GamePlay Controls      \r\n" +
+    "----------------------------------\r\n" +
+    "w = Up\r\n" +
+    "s = Down\r\n" +
+    "d = Right\r\n" +
+    "a = Left\r\n"
+  );
 
   InitializeCanvas();
 });
